@@ -1,11 +1,13 @@
 package com.example.nettywebsocket;
 
 
+import com.alibaba.fastjson.JSON;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
+import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -72,7 +76,44 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
 
     }
 
+    private static Map getUrlParams(String url){
+        Map<String,String> map = new HashMap<>();
+        url = url.replace("?",";");
+        if (!url.contains(";")){
+            return map;
+        }
+        if (url.split(";").length > 0){
+            String[] arr = url.split(";")[1].split("&");
+            for (String s : arr){
+                String key = s.split("=")[0];
+                String value = s.split("=")[1];
+                map.put(key,value);
+            }
+            return  map;
 
+        }else{
+            return map;
+        }
+    }
+
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        if (null != msg && msg instanceof FullHttpRequest) {
+            FullHttpRequest request = (FullHttpRequest) msg;
+            String uri = request.uri();
+
+            Map paramMap=getUrlParams(uri);
+            System.out.println("接收到的参数是："+ JSON.toJSONString(paramMap));
+            //如果url包含参数，需要处理
+            if(uri.contains("?")){
+                String newUri=uri.substring(0,uri.indexOf("?"));
+                System.out.println(newUri);
+                request.setUri(newUri);
+            }
+        }
+        super.channelRead(ctx,msg);
+    }
     /**
      * 每当从服务端读到客户端写入信息时,将信息转发给其他客户端的Channel.
      *

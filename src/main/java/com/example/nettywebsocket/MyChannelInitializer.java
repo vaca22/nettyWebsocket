@@ -24,11 +24,12 @@ public class MyChannelInitializer extends ChannelInitializer<SocketChannel> {
         socketChannel.pipeline().addLast(new HttpObjectAggregator(8192));
 
         // ================= 上述是用于支持http协议的 =============
-
+        // 添加自己的handler
+        socketChannel.pipeline().addLast(new MyWebSocketHandler());
         // websocket 服务器处理的协议，用于给指定的客户端进行连接访问的路由地址
         socketChannel.pipeline().addLast(new WebSocketServerProtocolHandler("/ws", "WebSocket", true, 65536 * 10));
 
-        // 添加自己的handler
-        socketChannel.pipeline().addLast(new MyWebSocketHandler());
+
+
     }
 }
