@@ -11,20 +11,11 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-@ServletComponentScan("com")
-@EntityScan(basePackages = {"com"})
-@EnableScheduling
-@EnableAsync
 public class NettyWebsocketApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(NettyWebsocketApplication.class, args);
 
-        // 启动netty服务器
-        try {
-            new NettyServer(8091).start();
-        } catch (Exception e) {
-            System.out.println("NettyServerError:" + e.getMessage());
-        }
+
     }
 }

@@ -8,16 +8,20 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 
 @Slf4j
+@Component
 public class NettyServer {
 
-    private final int port;
+    private final int port=8091;
 
-    public NettyServer(int port) {
-        this.port = port;
-    }
-
+//  //  public NettyServer(int port) {
+//        this.port = port;
+//    }
+    @PostConstruct
     public void start() throws Exception {
         // 修改bossGroup的数量，2线程足够用
         EventLoopGroup bossGroup = new NioEventLoopGroup(2);
@@ -30,7 +34,7 @@ public class NettyServer {
                     .localAddress(this.port)// 绑定监听端口
                     .childHandler(new MyChannelInitializer());
             ChannelFuture cf = sb.bind().sync(); // 服务器异步创建绑定
-            log.info(NettyServer.class + " 启动正在监听： " + cf.channel().localAddress());
+            log.info(NettyServer.class + " 启动正在监听fuck： " + cf.channel().localAddress());
             cf.channel().closeFuture().sync(); // 关闭服务器通道
         } finally {
             workerGroup.shutdownGracefully().sync(); // 释放线程池资源
