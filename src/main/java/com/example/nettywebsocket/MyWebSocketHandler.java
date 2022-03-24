@@ -154,7 +154,8 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
             Channel channel = ctx.channel();
             for (Channel tmpChannel : channelGroup) {
                 if (!tmpChannel.equals(channel)) {
-                    String sendedMsg = date + "：" + msg;
+                  //  String sendedMsg = date + "：" + msg;
+                    String sendedMsg = msg;
                     log.info("服务器转发消息,客户端地址: {}, msg: {}", ctx.channel().remoteAddress(), sendedMsg);
                     tmpChannel.writeAndFlush(new TextWebSocketFrame(sendedMsg));
                 }

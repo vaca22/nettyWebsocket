@@ -22,7 +22,7 @@ public class NettyWebsocketApplication {
 
         // 启动netty服务器
         try {
-            new NettyServer(8091).start();
+            new NettyServer(3003).start();
         } catch (Exception e) {
             System.out.println("NettyServerError:" + e.getMessage());
         }
