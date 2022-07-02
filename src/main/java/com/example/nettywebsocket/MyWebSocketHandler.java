@@ -41,7 +41,7 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
         // 获取连接的channel
-        log.info("netty客户端连接删除成功! fuckyou");
+
 
         Channel incomming = ctx.channel();
         //通知所有已经连接到服务器的客户端，有一个新的通道加入
@@ -59,15 +59,8 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
      */
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-        //获取连接的channel
-        /*Channel incomming = ctx.channel();
-        for(Channel channel:channelGroup){
-            channel.writeAndFlush("[SERVER]-"+incomming.remoteAddress()+"离开\n");
-        }*/
-        //从服务端的channelGroup中移除当前离开的客户端
+        System.out.println("fuckCXlose");
         channelGroup.remove(ctx.channel());
-
-        //从服务端的channelMap中移除当前离开的客户端
         Collection<Channel> col = channelMap.values();
         while (true == col.contains(ctx.channel())) {
             col.remove(ctx.channel());
@@ -114,54 +107,43 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
         }
         super.channelRead(ctx,msg);
     }
-    /**
-     * 每当从服务端读到客户端写入信息时,将信息转发给其他客户端的Channel.
-     *
-     * @param ctx
-     * @param msg
-     * @throws Exception
-     */
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
-        log.info("netty客户端连接删除成功2333333333333333333!");
-        log.info("netty客户端收到服务器数据, 客户端地址: {}, msg: {}", ctx.channel().remoteAddress(), msg.text());
-        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        //消息处理类
-        message(ctx, msg.text(), date);
+        System.out.println(msg.text());
 
-        //channelGroup.writeAndFlush( new TextWebSocketFrame(msg.text()));
+//        log.info("netty客户端收到服务器数据, 客户端地址: {}, msg: {}", ctx.channel().remoteAddress(), msg.text());
+//        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+//        System.out.println("fuck");
+        //消息处理类
+        //message(ctx, msg.text(), date);
+
     }
 
-    /**
-     * 当服务端的IO 抛出异常时被调用
-     *
-     * @param ctx
-     * @param cause
-     * @throws Exception
-     */
+
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        System.out.println("gaga2");
         Channel incoming = ctx.channel();
         log.error("SimpleChatClient:" + incoming.remoteAddress() + "异常", cause);
-        //异常出现就关闭连接
         ctx.close();
     }
 
-    //消息处理类
+
     public void message(ChannelHandlerContext ctx, String msg, String date) {
-        try {
-            // 消息转发给在线的其他用户
-            Channel channel = ctx.channel();
-            for (Channel tmpChannel : channelGroup) {
-                if (!tmpChannel.equals(channel)) {
-                  //  String sendedMsg = date + "：" + msg;
-                    String sendedMsg = msg;
-                    log.info("服务器转发消息,客户端地址: {}, msg: {}", ctx.channel().remoteAddress(), sendedMsg);
-                    tmpChannel.writeAndFlush(new TextWebSocketFrame(sendedMsg));
-                }
-            }
-        } catch (Exception e) {
-            log.error("message 处理异常， msg: {}, date: {}", msg, date, e);
-        }
+        System.out.println("fuck");
+//        try {
+//            // 消息转发给在线的其他用户
+//            Channel channel = ctx.channel();
+//            for (Channel tmpChannel : channelGroup) {
+//                if (!tmpChannel.equals(channel)) {
+//                    String sendedMsg = msg;
+//                    log.info("服务器转发消息,客户端地址: {}, msg: {}", ctx.channel().remoteAddress(), sendedMsg);
+//                    tmpChannel.writeAndFlush(new TextWebSocketFrame(sendedMsg));
+//                }
+//            }
+//        } catch (Exception e) {
+//            log.error("message 处理异常， msg: {}, date: {}", msg, date, e);
+//        }
     }
 }
