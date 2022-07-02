@@ -59,7 +59,6 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
      */
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("fuckCXlose");
         channelGroup.remove(ctx.channel());
         Collection<Channel> col = channelMap.values();
         while (true == col.contains(ctx.channel())) {
@@ -97,13 +96,10 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
             String uri = request.uri();
 
             Map paramMap=getUrlParams(uri);
-            System.out.println("接收到的参数是："+ JSON.toJSONString(paramMap));
-            //如果url包含参数，需要处理
-            if(uri.contains("?")){
-                String newUri=uri.substring(0,uri.indexOf("?"));
-                System.out.println(newUri);
-                request.setUri(newUri);
-            }
+
+            String phone= (String) paramMap.get("phone");
+            log.info(phone);
+            channelMap.put(phone,ctx.channel());
         }
         super.channelRead(ctx,msg);
     }
@@ -126,20 +122,5 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
     }
 
 
-    public void message(ChannelHandlerContext ctx, String msg, String date) {
-        System.out.println("fuck");
-//        try {
-//            // 消息转发给在线的其他用户
-//            Channel channel = ctx.channel();
-//            for (Channel tmpChannel : channelGroup) {
-//                if (!tmpChannel.equals(channel)) {
-//                    String sendedMsg = msg;
-//                    log.info("服务器转发消息,客户端地址: {}, msg: {}", ctx.channel().remoteAddress(), sendedMsg);
-//                    tmpChannel.writeAndFlush(new TextWebSocketFrame(sendedMsg));
-//                }
-//            }
-//        } catch (Exception e) {
-//            log.error("message 处理异常， msg: {}, date: {}", msg, date, e);
-//        }
-    }
+
 }
