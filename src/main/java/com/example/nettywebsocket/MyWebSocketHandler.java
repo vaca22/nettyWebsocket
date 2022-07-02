@@ -96,10 +96,13 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
             String uri = request.uri();
 
             Map paramMap=getUrlParams(uri);
-
             String phone= (String) paramMap.get("phone");
-            log.info(phone);
             channelMap.put(phone,ctx.channel());
+            //如果url包含参数，需要处理
+            if(uri.contains("?")){
+                String newUri=uri.substring(0,uri.indexOf("?"));
+                request.setUri(newUri);
+            }
         }
         super.channelRead(ctx,msg);
     }
@@ -122,5 +125,20 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
     }
 
 
-
+    public void message(ChannelHandlerContext ctx, String msg, String date) {
+        System.out.println("fuck");
+//        try {
+//            // 消息转发给在线的其他用户
+//            Channel channel = ctx.channel();
+//            for (Channel tmpChannel : channelGroup) {
+//                if (!tmpChannel.equals(channel)) {
+//                    String sendedMsg = msg;
+//                    log.info("服务器转发消息,客户端地址: {}, msg: {}", ctx.channel().remoteAddress(), sendedMsg);
+//                    tmpChannel.writeAndFlush(new TextWebSocketFrame(sendedMsg));
+//                }
+//            }
+//        } catch (Exception e) {
+//            log.error("message 处理异常， msg: {}, date: {}", msg, date, e);
+//        }
+    }
 }
