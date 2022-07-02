@@ -112,11 +112,7 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
         System.out.println(msg.text());
 
-//        log.info("netty客户端收到服务器数据, 客户端地址: {}, msg: {}", ctx.channel().remoteAddress(), msg.text());
-//        String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-//        System.out.println("fuck");
-        //消息处理类
-        //message(ctx, msg.text(), date);
+
 
     }
 
