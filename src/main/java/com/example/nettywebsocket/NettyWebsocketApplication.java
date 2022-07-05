@@ -1,5 +1,6 @@
 package com.example.nettywebsocket;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.SpringApplication;
@@ -15,6 +16,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EntityScan(basePackages = {"com"})
 @EnableScheduling
 @EnableAsync
+@Slf4j
 public class NettyWebsocketApplication {
 
     public static void main(String[] args) {
@@ -24,7 +26,7 @@ public class NettyWebsocketApplication {
         try {
             new NettyServer(3003).start();
         } catch (Exception e) {
-            System.out.println("NettyServerError:" + e.getMessage());
+            log.error("NettyServerError:" + e.getMessage());
         }
     }
 }

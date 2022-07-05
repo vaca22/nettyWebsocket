@@ -17,8 +17,7 @@ public class IdleStateEventHandler extends ChannelInboundHandlerAdapter {
         if(evt instanceof IdleStateEvent){
             IdleStateEvent event=(IdleStateEvent) evt;
             if(event.state()== IdleState.READER_IDLE){
-                System.out.println("fuaaaa");
-                log.debug("channel read time out"+ctx.channel().remoteAddress());
+                log.info("channel read time out"+ctx.channel().remoteAddress());
                 ctx.channel().close();
             }
         }else{

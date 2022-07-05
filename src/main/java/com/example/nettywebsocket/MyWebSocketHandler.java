@@ -1,7 +1,8 @@
 package com.example.nettywebsocket;
 
 
-import com.alibaba.fastjson.JSON;
+import org.json.JSONObject;
+
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -109,36 +110,36 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
-        System.out.println(msg.text());
+        log.info(msg.text());
+        JSONObject a=new JSONObject(msg.text());
+        String fromId=a.getString("id");
+        String toId=a.getString("toid");
+        String action=a.getString("action");
 
 
+        try {
+            Channel b=channelMap.get(toId);
+            if(b!=null){
+                b.writeAndFlush(new TextWebSocketFrame(msg.text()));
+            }else{
+                Channel b2=channelMap.get(fromId);
+                a.put("action","offline");
+                b2.writeAndFlush(new TextWebSocketFrame(a.toString()));
+            }
+        }catch (Exception e){
+            log.error("message 处理异常， msg: {}, date: {}", msg, e);
+        }
 
     }
 
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        System.out.println("gaga2");
         Channel incoming = ctx.channel();
-        log.error("SimpleChatClient:" + incoming.remoteAddress() + "异常", cause);
+        log.error("ChatClient:" + incoming.remoteAddress() + "异常", cause);
         ctx.close();
     }
 
 
-    public void message(ChannelHandlerContext ctx, String msg, String date) {
-        System.out.println("fuck");
-//        try {
-//            // 消息转发给在线的其他用户
-//            Channel channel = ctx.channel();
-//            for (Channel tmpChannel : channelGroup) {
-//                if (!tmpChannel.equals(channel)) {
-//                    String sendedMsg = msg;
-//                    log.info("服务器转发消息,客户端地址: {}, msg: {}", ctx.channel().remoteAddress(), sendedMsg);
-//                    tmpChannel.writeAndFlush(new TextWebSocketFrame(sendedMsg));
-//                }
-//            }
-//        } catch (Exception e) {
-//            log.error("message 处理异常， msg: {}, date: {}", msg, date, e);
-//        }
-    }
+
 }
