@@ -117,14 +117,18 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
         String toId=a.getString("toid");
         String action=a.getString("action");
         if(action.equals("call")){
-           a.put("roomNum",roomNum);
+           a.put("roomNum",""+roomNum);
+           roomNum++;
+           if(roomNum>10000000){
+               roomNum=10000;
+           }
         }
 
 
         try {
             Channel b=channelMap.get(toId);
             if(b!=null){
-                b.writeAndFlush(new TextWebSocketFrame(msg.text()));
+                b.writeAndFlush(new TextWebSocketFrame(a.toString()));
             }else{
                 Channel b2=channelMap.get(fromId);
                 a.put("action","offline");
