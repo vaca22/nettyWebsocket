@@ -19,7 +19,7 @@ public class MyChannelInitializer extends ChannelInitializer<SocketChannel> {
     @Override
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         log.info("收到新的客户端连接: {}", socketChannel.toString());
-        socketChannel.pipeline().addLast("IdleState",new IdleStateHandler(10,0,0, TimeUnit.SECONDS));
+        socketChannel.pipeline().addLast("IdleState",new IdleStateHandler(60,0,0, TimeUnit.SECONDS));
         socketChannel.pipeline().addLast(new HttpServerCodec());
         socketChannel.pipeline().addLast(new ChunkedWriteHandler());
         socketChannel.pipeline().addLast(new HttpObjectAggregator(8192));
