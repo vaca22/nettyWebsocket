@@ -25,7 +25,6 @@ public class MyChannelInitializer extends ChannelInitializer<SocketChannel> {
         socketChannel.pipeline().addLast(new HttpObjectAggregator(8192));
         socketChannel.pipeline().addLast(new MyWebSocketHandler());
         socketChannel.pipeline().addLast(new WebSocketServerProtocolHandler("/ws", "WebSocket", true, 65536 * 10));
-
         socketChannel.pipeline().addLast("IdleStateEventHandler",new IdleStateEventHandler());
     }
 }
