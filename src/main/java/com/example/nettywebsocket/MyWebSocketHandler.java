@@ -116,13 +116,13 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
         String fromId=a.getString("id");
         String toId=a.getString("toid");
         String action=a.getString("action");
-        if(action.equals("call")){
-           a.put("roomNum",""+roomNum);
-           roomNum++;
-           if(roomNum>10000000){
-               roomNum=10000;
-           }
-        }
+//        if(action.equals("call")){
+//           a.put("roomNum",""+roomNum);
+//           roomNum++;
+//           if(roomNum>10000000){
+//               roomNum=10000;
+//           }
+//        }
 
 
         try {
