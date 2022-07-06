@@ -98,7 +98,12 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
 
             Map paramMap=getUrlParams(uri);
             String phone= (String) paramMap.get("phone");
-            channelMap.put(phone,ctx.channel());
+            if(phone!=null){
+                if(phone.length()>0){
+                    channelMap.put(phone,ctx.channel());
+                }
+            }
+
             //如果url包含参数，需要处理
             if(uri.contains("?")){
                 String newUri=uri.substring(0,uri.indexOf("?"));
