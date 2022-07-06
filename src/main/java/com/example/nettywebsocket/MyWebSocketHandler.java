@@ -107,6 +107,7 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
         }
         super.channelRead(ctx,msg);
     }
+    public  static  int roomNum=100000;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
@@ -115,6 +116,9 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
         String fromId=a.getString("id");
         String toId=a.getString("toid");
         String action=a.getString("action");
+        if(action.equals("call")){
+           a.put("roomNum",roomNum);
+        }
 
 
         try {
