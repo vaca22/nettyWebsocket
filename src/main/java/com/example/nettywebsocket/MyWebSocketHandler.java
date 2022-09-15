@@ -1,6 +1,7 @@
 package com.example.nettywebsocket;
 
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import io.netty.channel.Channel;
@@ -14,10 +15,7 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -46,9 +44,11 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
 
         Channel incomming = ctx.channel();
         //通知所有已经连接到服务器的客户端，有一个新的通道加入
-        /*for(Channel channel:channelGroup){
-            channel.writeAndFlush("[SERVER]-"+incomming.remoteAddress()+"加入\n");
-        }*/
+
+
+//        for(Channel channel:channelGroup){
+//            channel.writeAndFlush("[SERVER]-"+incomming.remoteAddress()+"加入\n");
+//        }
         channelGroup.add(incomming);
     }
 
@@ -101,6 +101,12 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
             if(phone!=null){
                 if(phone.length()>0){
                     channelMap.put(phone,ctx.channel());
+                    Set<String> userSet = channelMap.keySet();
+                    JSONArray users=new JSONArray();
+                    for(String key:userSet){
+                        users.put(key);
+                    }
+                    System.out.println(users.toString());
                 }
             }
 
