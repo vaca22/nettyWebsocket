@@ -66,6 +66,7 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
             col.remove(ctx.channel());
             log.info("netty客户端连接删除成功!");
         }
+        updateUser();
 
     }
 
