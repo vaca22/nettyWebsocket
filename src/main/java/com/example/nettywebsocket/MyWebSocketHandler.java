@@ -69,24 +69,53 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
 
     }
 
-    private static Map getUrlParams(String url){
-        Map<String,String> map = new HashMap<>();
-        url = url.replace("?",";");
-        if (!url.contains(";")){
+    private static Map getUrlParams(String url) {
+        Map<String, String> map = new HashMap<>();
+        url = url.replace("?", ";");
+        if (!url.contains(";")) {
             return map;
         }
-        if (url.split(";").length > 0){
+        if (url.split(";").length > 0) {
             String[] arr = url.split(";")[1].split("&");
-            for (String s : arr){
+            for (String s : arr) {
                 String key = s.split("=")[0];
                 String value = s.split("=")[1];
-                map.put(key,value);
+                map.put(key, value);
             }
-            return  map;
+            return map;
 
-        }else{
+        } else {
             return map;
         }
+    }
+
+
+    public void broadcast(String info) {
+        new Thread(){
+            @Override
+            public void run() {
+                for (Channel channel : channelGroup) {
+                    channel.writeAndFlush(new TextWebSocketFrame(info));
+                }
+            }
+        }.start();
+
+    }
+
+    public void updateUser() {
+        JSONObject sendInfo = new JSONObject();
+        sendInfo.put("id", "dada");
+        sendInfo.put("toid", "dada");
+        sendInfo.put("action", "update");
+
+
+        Set<String> userSet = channelMap.keySet();
+        JSONArray users = new JSONArray();
+        for (String key : userSet) {
+            users.put(key);
+        }
+        sendInfo.put("info", users.toString());
+        broadcast(sendInfo.toString());
     }
 
 
@@ -96,49 +125,43 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
             FullHttpRequest request = (FullHttpRequest) msg;
             String uri = request.uri();
 
-            Map paramMap=getUrlParams(uri);
-            String phone= (String) paramMap.get("phone");
-            if(phone!=null){
-                if(phone.length()>0){
-                    channelMap.put(phone,ctx.channel());
-                    Set<String> userSet = channelMap.keySet();
-                    JSONArray users=new JSONArray();
-                    for(String key:userSet){
-                        users.put(key);
-                    }
-                    System.out.println(users.toString());
+            Map paramMap = getUrlParams(uri);
+            String phone = (String) paramMap.get("phone");
+            if (phone != null) {
+                if (phone.length() > 0) {
+                    channelMap.put(phone, ctx.channel());
+                    updateUser();;
                 }
             }
 
             //如果url包含参数，需要处理
-            if(uri.contains("?")){
-                String newUri=uri.substring(0,uri.indexOf("?"));
+            if (uri.contains("?")) {
+                String newUri = uri.substring(0, uri.indexOf("?"));
                 request.setUri(newUri);
             }
         }
-        super.channelRead(ctx,msg);
+        super.channelRead(ctx, msg);
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
         log.info(msg.text());
-        JSONObject a=new JSONObject(msg.text());
-        String fromId=a.getString("id");
-        String toId=a.getString("toid");
-        String action=a.getString("action");
-
+        JSONObject a = new JSONObject(msg.text());
+        String fromId = a.getString("id");
+        String toId = a.getString("toid");
+        String action = a.getString("action");
 
 
         try {
-            Channel b=channelMap.get(toId);
-            if(b!=null){
+            Channel b = channelMap.get(toId);
+            if (b != null) {
                 b.writeAndFlush(new TextWebSocketFrame(a.toString()));
-            }else{
-                Channel b2=channelMap.get(fromId);
-                a.put("action","offline");
+            } else {
+                Channel b2 = channelMap.get(fromId);
+                a.put("action", "offline");
                 b2.writeAndFlush(new TextWebSocketFrame(a.toString()));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("message 处理异常， msg: {}, date: {}", msg, e);
         }
 
@@ -151,7 +174,6 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
         log.error("ChatClient:" + incoming.remoteAddress() + "异常", cause);
         ctx.close();
     }
-
 
 
 }
