@@ -92,14 +92,11 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
 
 
     public void broadcast(String info) {
-        new Thread(){
-            @Override
-            public void run() {
-                for (Channel channel : channelGroup) {
-                    channel.writeAndFlush(new TextWebSocketFrame(info));
-                }
+        new Thread(() -> {
+            for (Channel channel : channelGroup) {
+                channel.writeAndFlush(new TextWebSocketFrame(info));
             }
-        }.start();
+        }).start();
 
     }
 
