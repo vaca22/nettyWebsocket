@@ -18,6 +18,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.example.nettywebsocket.SocketConst.ORDER;
+
 /**
  * 自定义服务器端处理handler，继承SimpleChannelInboundHandler，处理WebSocket 连接数据
  */
@@ -144,20 +146,30 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame msg) throws Exception {
         log.info(msg.text());
-        JSONObject a = new JSONObject(msg.text());
-        String fromId = a.getString("id");
-        String toId = a.getString("toid");
-        String action = a.getString("action");
+        JSONObject msgObject = new JSONObject(msg.text());
+        String fromId = msgObject.getString("id");
+        String toId = msgObject.getString("toid");
+        String action = msgObject.getString("action");
 
 
         try {
             Channel b = channelMap.get(toId);
+            Channel me = channelMap.get(fromId);
             if (b != null) {
-                b.writeAndFlush(new TextWebSocketFrame(a.toString()));
+                if(action.equals(SocketConst.ACCEPT)){
+                    int order=com.example.nettywebsocket.IntUtils.getRandomNumberInRange(0,1);
+                    msgObject.put(ORDER,order);
+                    b.writeAndFlush(new TextWebSocketFrame(msgObject.toString()));
+                    msgObject.put(ORDER,1-order);
+                    me.writeAndFlush(new TextWebSocketFrame(msgObject.toString()));
+                }else{
+                    b.writeAndFlush(new TextWebSocketFrame(msgObject.toString()));
+                }
+
             } else {
                 Channel b2 = channelMap.get(fromId);
-                a.put("action", "offline");
-                b2.writeAndFlush(new TextWebSocketFrame(a.toString()));
+                msgObject.put("action", "offline");
+                b2.writeAndFlush(new TextWebSocketFrame(msgObject.toString()));
             }
         } catch (Exception e) {
             log.error("message 处理异常， msg: {}, date: {}", msg, e);
