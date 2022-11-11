@@ -17,6 +17,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Slf4j
 public class NettyWebsocketApplication {
 
+
+
     public static void main(String[] args) {
         SpringApplication.run(NettyWebsocketApplication.class, args);
 
