@@ -1,4 +1,4 @@
-package com.example.nettywebsocket;
+package com.example.nettywebsocket.socket;
 
 
 import org.json.JSONArray;
@@ -14,11 +14,10 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.example.nettywebsocket.SocketConst.ORDER;
+import static com.example.nettywebsocket.socket.SocketConst.ORDER;
 
 /**
  * 自定义服务器端处理handler，继承SimpleChannelInboundHandler，处理WebSocket 连接数据
@@ -157,7 +156,7 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
             Channel me = channelMap.get(fromId);
             if (b != null) {
                 if(action.equals(SocketConst.ACCEPT)){
-                    int order=com.example.nettywebsocket.IntUtils.getRandomNumberInRange(0,1);
+                    int order= IntUtils.getRandomNumberInRange(0,1);
                     msgObject.put(ORDER,order);
                     b.writeAndFlush(new TextWebSocketFrame(msgObject.toString()));
                     msgObject.put(ORDER,1-order);

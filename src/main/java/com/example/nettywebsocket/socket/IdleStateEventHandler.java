@@ -1,4 +1,4 @@
-package com.example.nettywebsocket;
+package com.example.nettywebsocket.socket;
 
 import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.*;

@@ -1,4 +1,4 @@
-package com.example.nettywebsocket;
+package com.example.nettywebsocket.socket;
 
 
 
