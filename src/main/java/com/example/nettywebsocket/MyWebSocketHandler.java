@@ -158,6 +158,7 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
             if (b != null) {
                 if(action.equals(SocketConst.ACCEPT)){
                     int order=com.example.nettywebsocket.IntUtils.getRandomNumberInRange(0,1);
+                    log.error("message 处理异常， msg: {}", order);
                     msgObject.put(ORDER,order);
                     b.writeAndFlush(new TextWebSocketFrame(msgObject.toString()));
                     msgObject.put(ORDER,1-order);
