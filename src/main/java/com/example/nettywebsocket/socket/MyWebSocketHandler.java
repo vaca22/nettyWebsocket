@@ -1,6 +1,8 @@
 package com.example.nettywebsocket.socket;
 
 
+import com.example.nettywebsocket.sql.ChessMapper;
+import com.example.nettywebsocket.sql.ChessUser;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -13,6 +15,7 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -100,7 +103,8 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
         }).start();
 
     }
-
+    @Autowired
+    ChessMapper chessMapper;
     public void updateUser() {
         JSONObject sendInfo = new JSONObject();
         sendInfo.put("id", "dada");
@@ -109,9 +113,10 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
 
 
         Set<String> userSet = channelMap.keySet();
+
         JSONArray users = new JSONArray();
         for (String key : userSet) {
-            users.put(key);
+            users.put(chessMapper.findById(key));
         }
         sendInfo.put("info", users.toString());
         broadcast(sendInfo.toString());
