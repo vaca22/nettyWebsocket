@@ -63,7 +63,7 @@ public class UserInfoController {
     public String uploadUserInfo(@RequestBody ChessUser chessUser) throws IOException {
 
 
-        chessMapper.updateById(chessUser.getUid(),chessUser.getName(),chessUser.getHeader_url());
+        chessMapper.updateHeader(chessUser.getUid(),chessUser.getName(),chessUser.getHeader_url());
         log.error("NettyServerError:" +chessUser.getHeader_url()+"  "+chessUser.getUid());
         System.out.println("fuck    "+chessUser.getName());
         return "Hello W22orld!";
