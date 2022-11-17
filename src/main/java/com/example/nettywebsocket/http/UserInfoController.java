@@ -11,6 +11,8 @@ import org.springframework.web.servlet.ModelAndView;
 import java.io.File;
 import java.io.IOException;
 
+import static org.apache.xmlbeans.impl.common.XBeanDebug.log;
+
 @RestController
 @RequestMapping("/cloud-napi/v1")
 @Slf4j
@@ -27,7 +29,7 @@ public class UserInfoController {
     @RequestMapping("/")
     public String hello2() {
         ChessUser chessUser= chessMapper.findByName("San Francisco");
-        log.error("fuck  "+chessUser.getHeader_url());
+        UserInfoController.log.error("fuck  "+chessUser.getHeader_url());
         return "Hello World!";
     }
 
@@ -52,6 +54,17 @@ public class UserInfoController {
         file.transferTo(myObj.getAbsoluteFile());
         System.out.println(myObj.getAbsolutePath()+"  "+  file.getOriginalFilename());
 
+        return "Hello W22orld!";
+    }
+
+
+    @PostMapping("/upload/info")
+    @ResponseBody
+    public String uploadUserInfo(@RequestBody ChessUser chessUser) throws IOException {
+
+
+        log.error("NettyServerError:" +chessUser.getHeader_url()+"  "+chessUser.getUid());
+        System.out.println("fuck    "+chessUser.getName());
         return "Hello W22orld!";
     }
 }
