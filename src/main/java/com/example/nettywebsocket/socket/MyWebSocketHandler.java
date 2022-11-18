@@ -21,6 +21,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.example.nettywebsocket.socket.SocketConst.ORDER;
+import static com.example.nettywebsocket.sql.ChessDatabase.chessMapper;
 
 /**
  * 自定义服务器端处理handler，继承SimpleChannelInboundHandler，处理WebSocket 连接数据
@@ -103,8 +104,7 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
         }).start();
 
     }
-    @Autowired
-    ChessMapper chessMapper;
+
     public void updateUser() {
         JSONObject sendInfo = new JSONObject();
         sendInfo.put("id", "dada");
@@ -112,13 +112,14 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
         sendInfo.put("action", "update");
 
 
+
         Set<String> userSet = channelMap.keySet();
 
         JSONArray users = new JSONArray();
         for (String key : userSet) {
-            users.put(chessMapper.findById(key));
+            users.put(chessMapper.findById(key).toJson());
         }
-        sendInfo.put("info", users.toString());
+        sendInfo.put("info", users);
         broadcast(sendInfo.toString());
     }
 
