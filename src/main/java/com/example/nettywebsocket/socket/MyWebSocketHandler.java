@@ -44,16 +44,7 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
      */
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-        // 获取连接的channel
-
-
         Channel incomming = ctx.channel();
-        //通知所有已经连接到服务器的客户端，有一个新的通道加入
-
-
-//        for(Channel channel:channelGroup){
-//            channel.writeAndFlush("[SERVER]-"+incomming.remoteAddress()+"加入\n");
-//        }
         channelGroup.add(incomming);
     }
 
