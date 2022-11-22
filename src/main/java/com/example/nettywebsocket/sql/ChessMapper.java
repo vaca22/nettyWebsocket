@@ -24,4 +24,9 @@ public interface ChessMapper {
 
     @Select("insert into five_chess_user (uid, name, header_url) values (#{uid}, #{name}, #{header_url}) on duplicate key update header_url=#{header_url}")
     ChessUser updateHeader(@Param("uid") String uid,@Param("name") String name,@Param("header_url") String header_url);
+
+
+
+    @Select("insert ignore into five_chess_user (uid, name, header_url) values (#{uid}, #{name}, #{header_url}) ")
+    ChessUser initUser(@Param("uid") String uid,@Param("name") String name,@Param("header_url") String header_url);
 }

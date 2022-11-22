@@ -126,7 +126,7 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
             if (phone != null) {
                 if (phone.length() > 0) {
                     channelMap.put(phone, ctx.channel());
-
+                    chessMapper.initUser(phone,phone,"");
                     updateUser();
                 }
             }
