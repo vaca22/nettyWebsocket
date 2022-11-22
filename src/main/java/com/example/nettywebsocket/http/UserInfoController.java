@@ -59,10 +59,19 @@ public class UserInfoController {
     }
 
 
-    @PostMapping("/upload/info")
+    @PostMapping("/upload/info/head")
     @ResponseBody
-    public String uploadUserInfo(@RequestBody ChessUser chessUser) throws IOException {
+    public String uploadUserInfoHead(@RequestBody ChessUser chessUser) throws IOException {
         chessMapper.updateHeader(chessUser.getUid(),chessUser.getName(),chessUser.getHeader_url());
+        MyWebSocketHandler.updateUser();
+        return "ok";
+    }
+
+
+    @PostMapping("/upload/info/name")
+    @ResponseBody
+    public String uploadUserInfoName(@RequestBody ChessUser chessUser) throws IOException {
+        chessMapper.updateName(chessUser.getUid(),chessUser.getName(),chessUser.getHeader_url());
         MyWebSocketHandler.updateUser();
         return "ok";
     }
