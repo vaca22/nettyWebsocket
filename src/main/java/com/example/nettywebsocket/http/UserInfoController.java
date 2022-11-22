@@ -1,5 +1,6 @@
 package com.example.nettywebsocket.http;
 
+import com.example.nettywebsocket.socket.MyWebSocketHandler;
 import com.example.nettywebsocket.sql.ChessMapper;
 import com.example.nettywebsocket.sql.ChessUser;
 import lombok.extern.slf4j.Slf4j;
@@ -61,10 +62,8 @@ public class UserInfoController {
     @PostMapping("/upload/info")
     @ResponseBody
     public String uploadUserInfo(@RequestBody ChessUser chessUser) throws IOException {
-
-
         chessMapper.updateHeader(chessUser.getUid(),chessUser.getName(),chessUser.getHeader_url());
-        log.error("NettyServerError:" +chessUser.getHeader_url()+"  "+chessUser.getUid());
-        return "Hello W22orld!";
+        MyWebSocketHandler.updateUser();
+        return "ok";
     }
 }

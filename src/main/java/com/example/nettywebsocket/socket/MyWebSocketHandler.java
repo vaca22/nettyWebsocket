@@ -87,7 +87,7 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
     }
 
 
-    public void broadcast(String info) {
+    public static void broadcast(String info) {
         new Thread(() -> {
             for (Channel channel : channelGroup) {
                 channel.writeAndFlush(new TextWebSocketFrame(info));
@@ -96,7 +96,7 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
 
     }
 
-    public void updateUser() {
+    public static void updateUser() {
         JSONObject sendInfo = new JSONObject();
         sendInfo.put("id", "dada");
         sendInfo.put("toid", "dada");
@@ -126,7 +126,8 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
             if (phone != null) {
                 if (phone.length() > 0) {
                     channelMap.put(phone, ctx.channel());
-                    updateUser();;
+
+                    updateUser();
                 }
             }
 
