@@ -32,7 +32,7 @@ public class NettyWebsocketApplication {
 
         // 启动netty服务器
         try {
-            new NettyServer(3003).start();
+            new NettyServer(13211).start();
         } catch (Exception e) {
             log.error("NettyServerError:" + e.getMessage());
         }
