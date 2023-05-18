@@ -1,8 +1,6 @@
 package com.example.nettywebsocket;
 
 
-import org.json.JSONObject;
-
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -12,10 +10,9 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -120,6 +117,10 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
         String fromId=a.getString("id");
         String toId=a.getString("toid");
         String action=a.getString("action");
+
+        if(action.equals("login")){
+            channelMap.put(fromId,ctx.channel());
+        }
 
 
 
