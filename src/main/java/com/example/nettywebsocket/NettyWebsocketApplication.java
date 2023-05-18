@@ -1,5 +1,6 @@
 package com.example.nettywebsocket;
 
+import com.example.nettywebsocket.dao.P2pMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,6 +16,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAsync
 @Slf4j
 public class NettyWebsocketApplication {
+    public NettyWebsocketApplication(P2pMapper chessMapper) {
+        MyWebSocketHandler.p2pMapperPublic = chessMapper;
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(NettyWebsocketApplication.class, args);

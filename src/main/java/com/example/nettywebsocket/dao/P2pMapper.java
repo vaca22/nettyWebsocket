@@ -26,5 +26,12 @@ public interface P2pMapper {
     @Insert("UPDATE p2p_table SET note = #{note} WHERE phone = #{phone} and device = #{device}")
     void updateNote(@Param("phone") String phone, @Param("device") String device, @Param("note") String note);
 
+
+
+    //find phone by device
+    @Select("SELECT phone FROM p2p_table WHERE device = #{device}")
+    List<String> findPhoneByDevice(@Param("device") String device);
+
+
 }
 

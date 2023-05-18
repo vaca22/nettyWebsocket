@@ -1,6 +1,7 @@
 package com.example.nettywebsocket;
 
 
+import com.example.nettywebsocket.dao.P2pMapper;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -14,6 +15,7 @@ import org.json.JSONObject;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,7 +31,7 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
     // 可以通过用户的唯一标识保存用户的channel
     // 这样就可以发送给指定的用户
     public static ConcurrentHashMap<String, Channel> channelMap = new ConcurrentHashMap<>();
-
+    public static ConcurrentHashMap<Channel,String> userMap = new ConcurrentHashMap<>();
     /**
      * 每当服务端收到新的客户端连接时,客户端的channel存入ChannelGroup列表中,并通知列表中其他客户端channel
      *
@@ -57,9 +59,12 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
      */
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+
+        offlineUser(userMap.get(ctx.channel()));
+        userMap.remove(ctx.channel());
         channelGroup.remove(ctx.channel());
         Collection<Channel> col = channelMap.values();
-        while (true == col.contains(ctx.channel())) {
+        while (col.contains(ctx.channel())) {
             col.remove(ctx.channel());
             log.info("netty客户端连接删除成功!");
         }
@@ -98,6 +103,8 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
             if(phone!=null){
                 if(phone.length()>0){
                     channelMap.put(phone,ctx.channel());
+                    userMap.put(ctx.channel(),phone);
+                    updateUser(phone);
                 }
             }
 
@@ -155,21 +162,39 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
 
     }
 
-    public static void updateUser() {
-        JSONObject sendInfo = new JSONObject();
-        sendInfo.put("id", "dada");
-        sendInfo.put("toid", "dada");
-        sendInfo.put("action", "update");
+    public static P2pMapper p2pMapperPublic;
 
+    public static void updateUser(String device) {
+        List<String> onlinePhone= p2pMapperPublic.findPhoneByDevice(device);
+        if(onlinePhone.size()>0){
+            for(String phone:onlinePhone){
+                Channel channel=channelMap.get(phone);
+                if(channel!=null){
+                    JSONObject sendInfo = new JSONObject();
+                    sendInfo.put("id", device);
+                    sendInfo.put("toid", phone);
+                    sendInfo.put("action", "online_device");
+                    sendInfo.put("content", "");
+                    channel.writeAndFlush(new TextWebSocketFrame(sendInfo.toString()));
+                }
+            }
+        }
+    }
 
-
-//        Set<String> userSet = channelMap.keySet();
-//
-//        JSONArray users = new JSONArray();
-//        for (String key : userSet) {
-//            users.put(chessMapper.findById(key).toJson());
-//        }
-//        sendInfo.put("info", users);
-//        broadcast(sendInfo.toString());
+    public static void offlineUser(String device) {
+        List<String> onlinePhone= p2pMapperPublic.findPhoneByDevice(device);
+        if(onlinePhone.size()>0){
+            for(String phone:onlinePhone){
+                Channel channel=channelMap.get(phone);
+                if(channel!=null){
+                    JSONObject sendInfo = new JSONObject();
+                    sendInfo.put("id", device);
+                    sendInfo.put("toid", phone);
+                    sendInfo.put("action", "off_device");
+                    sendInfo.put("content", "");
+                    channel.writeAndFlush(new TextWebSocketFrame(sendInfo.toString()));
+                }
+            }
+        }
     }
 }
