@@ -29,11 +29,18 @@ public class P2pController {
     return p2pMapper.findByPhone( phone);
   }
 
-  @PostMapping("/p2p/bind")
+  @PostMapping("/bind")
   @ResponseBody
-  public String uploadUserInfoHead(@RequestBody P2pTable data) throws IOException {
+  public String uploadUserInfo(@RequestBody P2pTable data) throws IOException {
     p2pMapper.insert(data.getPhone(), data.getDevice(), data.getNote());
     return "ok";
   }
 
+
+  @PostMapping("/update/note")
+  @ResponseBody
+  public String uploadNote(@RequestBody P2pTable data) throws IOException {
+    p2pMapper.updateNote(data.getPhone(), data.getDevice(), data.getNote());
+    return "ok";
+  }
 }

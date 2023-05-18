@@ -118,9 +118,7 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
         String toId=a.getString("toid");
         String action=a.getString("action");
 
-        if(action.equals("login")){
-            channelMap.put(fromId,ctx.channel());
-        }
+
 
 
 
@@ -148,5 +146,30 @@ public class MyWebSocketHandler extends SimpleChannelInboundHandler<TextWebSocke
     }
 
 
+    public static void broadcast(String info) {
+        new Thread(() -> {
+            for (Channel channel : channelGroup) {
+                channel.writeAndFlush(new TextWebSocketFrame(info));
+            }
+        }).start();
 
+    }
+
+    public static void updateUser() {
+        JSONObject sendInfo = new JSONObject();
+        sendInfo.put("id", "dada");
+        sendInfo.put("toid", "dada");
+        sendInfo.put("action", "update");
+
+
+
+//        Set<String> userSet = channelMap.keySet();
+//
+//        JSONArray users = new JSONArray();
+//        for (String key : userSet) {
+//            users.put(chessMapper.findById(key).toJson());
+//        }
+//        sendInfo.put("info", users);
+//        broadcast(sendInfo.toString());
+    }
 }
