@@ -5,3 +5,10 @@ CREATE TABLE IF NOT EXISTS p2p_table  (
   note           VARCHAR(100)  ,
     CONSTRAINT p2p_table primary key (phone,device)
 );
+
+
+CREATE TABLE IF NOT EXISTS p2p_user_table  (
+  phone             VARCHAR(100) NOT NULL ,
+  password            VARCHAR(100)  NOT NULL,
+  primary key (phone)
+);

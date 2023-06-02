@@ -33,5 +33,15 @@ public interface P2pMapper {
     List<String> findPhoneByDevice(@Param("device") String device);
 
 
+
+    //insert P2PUser to p2p_user_table
+    @Insert("INSERT INTO p2p_user_table (phone, password) VALUES (#{phone}, #{password})")
+    void insertP2pUser(@Param("phone") String phone, @Param("password") String password);
+
+
+    //find password by phone
+    @Select("SELECT password FROM p2p_user_table WHERE phone = #{phone}")
+    String findPasswordByPhone(@Param("phone") String phone);
+
 }
 
