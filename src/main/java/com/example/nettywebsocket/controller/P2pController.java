@@ -4,6 +4,7 @@ import com.example.nettywebsocket.dao.P2pMapper;
 import com.example.nettywebsocket.model.P2pTable;
 import com.example.nettywebsocket.model.P2pUser;
 import io.netty.channel.Channel;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,12 +57,17 @@ public class P2pController {
     @PostMapping("/register")
     @ResponseBody
     public String register(@RequestBody P2pUser data) throws IOException {
+        JSONObject json = new JSONObject();
         String password = p2pMapper.findPasswordByPhone(data.getPhone());
         if (password != null) {
-            return "phone already exists";
+            json.put("code", 1);
+            json.put("msg", "phone already exists");
+            return json.toString();
         }
         p2pMapper.insertP2pUser(data.getPhone(), data.getPassword());
-        return "ok";
+        json.put("code", 0);
+        json.put("msg", "ok");
+        return json.toString();
     }
 
 
@@ -70,13 +76,20 @@ public class P2pController {
     @ResponseBody
     public String login(@RequestBody P2pUser data) throws IOException {
         String password = p2pMapper.findPasswordByPhone(data.getPhone());
+        JSONObject json = new JSONObject();
         if (password == null) {
-            return "phone not exists";
+            json.put("code", 1);
+            json.put("msg", "phone not exists");
+            return json.toString();
         }
         if (!password.equals(data.getPassword())) {
-            return "password error";
+            json.put("code", 2);
+            json.put("msg", "password error");
+            return json.toString();
         }
-        return "ok";
+        json.put("code", 0);
+        json.put("msg", "ok");
+        return json.toString();
     }
 
     @PostMapping("/update/note")
