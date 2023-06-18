@@ -1,10 +1,7 @@
 package com.example.nettywebsocket.dao;
 
 import com.example.nettywebsocket.model.P2pTable;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -37,6 +34,10 @@ public interface P2pMapper {
     //insert P2PUser to p2p_user_table
     @Insert("INSERT INTO p2p_user_table (phone, password) VALUES (#{phone}, #{password})")
     void insertP2pUser(@Param("phone") String phone, @Param("password") String password);
+
+    //delete P2PUser from p2p_user_table
+    @Delete("DELETE FROM p2p_user_table WHERE phone = #{phone}")
+    void deleteP2pUser(@Param("phone") String phone);
 
 
     //find password by phone

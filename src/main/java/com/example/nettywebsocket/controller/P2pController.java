@@ -70,6 +70,13 @@ public class P2pController {
         return json.toString();
     }
 
+    //delete
+    @PostMapping("/delete")
+    @ResponseBody
+    public String delete(@RequestBody P2pTable data) throws IOException {
+        p2pMapper.deleteP2pUser(data.getPhone());
+        return "ok";
+    }
 
     //login
     @PostMapping("/login")
