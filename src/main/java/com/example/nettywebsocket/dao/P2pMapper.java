@@ -39,6 +39,10 @@ public interface P2pMapper {
     @Delete("DELETE FROM p2p_user_table WHERE phone = #{phone}")
     void deleteP2pUser(@Param("phone") String phone);
 
+    //delete p2ptable by phone
+    @Delete("DELETE FROM p2p_table WHERE phone = #{phone}")
+    void deleteP2pTableByPhone(@Param("phone") String phone);
+
 
     //find password by phone
     @Select("SELECT password FROM p2p_user_table WHERE phone = #{phone}")

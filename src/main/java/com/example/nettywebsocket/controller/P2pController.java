@@ -74,7 +74,8 @@ public class P2pController {
     @PostMapping("/delete")
     @ResponseBody
     public String delete(@RequestBody P2pTable data) throws IOException {
-        p2pMapper.deleteP2pUser(data.getPhone());
+//        p2pMapper.deleteP2pUser(data.getPhone());
+//        p2pMapper.deleteP2pTableByPhone(data.getPhone());
         return "ok";
     }
 
