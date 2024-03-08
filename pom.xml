@@ -8,11 +8,11 @@
         <version>2.6.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.example</groupId>
-    <artifactId>nettyWebsocket</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>nettyWebsocket</name>
-    <description>nettyWebsocket</description>
+    <groupId>com.vaca</groupId>
+    <artifactId>camServer</artifactId>
+    <version>0.0.2</version>
+    <name>camServer</name>
+    <description>camServer</description>
     <properties>
         <java.version>11</java.version>
     </properties>
